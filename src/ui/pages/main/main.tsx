@@ -1,26 +1,38 @@
-import React, {Component} from "react";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../features/common/redux";
-import {useNavigate} from "react-router-dom";
-import {MainPageVm, MainPageVmInterface} from "./main_vm";
+import React, {PureComponent} from "react";
+import {MainPageVm, TMainPageVmState} from "./main_vm";
+import {GoodsPageComponent} from "../goods/goods";
+import {AuthPageComponent} from "../auth/auth";
 
-export class MainPage extends Component {
-    vm = MainPageVm.prototype
+type TMainPageComponentProps = {}
 
-    componentWillUnmount() {
-        this.vm.dispose()
+export class MainPageComponent extends PureComponent<TMainPageComponentProps, TMainPageVmState> {
+    private vm = new MainPageVm()
+
+    constructor(props: TMainPageComponentProps) {
+        super(props);
+        this.state = this.vm.state()
+        this.vm.initState()
+    }
+
+    async updateComponentOnRender() {
+        setTimeout(() => {
+            this.vm.changeStateNotifier.subscribe((value) => {
+                if (value) {
+                    this.setState(value)
+                }
+            })
+        }, 50)
     }
 
     render() {
-        return <MainPageView vm={this.vm}/>;
+        this.updateComponentOnRender()
+
+        return <div>
+            {
+                this.state.isLogin
+                    ? <GoodsPageComponent/>
+                    : <AuthPageComponent/>
+            }
+        </div>
     }
-}
-
-const MainPageView = ({vm}: MainPageVmInterface): JSX.Element => {
-    let state = useSelector((state: RootState) => state.authPageVmReducer)
-    let navigate = useNavigate()
-
-    return (<div>
-        asdsadsad
-    </div>)
 }

@@ -1,11 +1,13 @@
 import {authService} from "../../../features/auth/domain/auth_service";
 import {store} from "../../../features/common/redux";
 import {AuthPageVmState} from "./auth_state";
+import {BehaviorSubject} from "rxjs";
 
-type TAuthPageVmState = typeof AuthPageVmState
+export type TAuthPageVmState = typeof AuthPageVmState
 
-export type AuthPageVMInterface = {
-    vm: AuthPageVM
+export type AuthPageVmType = {
+    vm: AuthPageVM,
+    state: TAuthPageVmState
 }
 
 export class AuthPageVM {
@@ -18,12 +20,14 @@ export class AuthPageVM {
         return store
     }
 
-    private authService() {
-        return authService
+    changeStateNotifier = new BehaviorSubject<TAuthPageVmState>(AuthPageVmState)
+
+    state(): TAuthPageVmState {
+        return this.store().getState().authPageVmReducer
     }
 
-    private state() {
-        return this.store().getState().authPageVmReducer
+    initState() {
+        this.setState(AuthPageVmState)
     }
 
     setUserName(name: string) {
@@ -42,25 +46,33 @@ export class AuthPageVM {
         }
     }
 
-    login(navigate?: () => void) {
+    setState(state: TAuthPageVmState) {
+        this.store().dispatch(authPageVmAction(state))
+        this.changeStateNotifier.next(state)
+    }
+
+    async loginOnApi() {
+        await authService.login(this.userLogin, this.userPassword)
+    }
+
+    async login() {
         if (this.isLogin && this.isPassword) {
-            this.authService().login(this.userLogin, this.userPassword)
-            this.store().dispatch(AuthPageVmAction({isDisabled: true, isLoading: true}))
+            this.setState({...this.state(), isDisabled: true, isLoading: true})
 
-            setTimeout(() => {
-                this.store().dispatch(AuthPageVmAction({isDisabled: false, isLoading: false}))
-
-                if (navigate != null) {
-                    navigate()
-                }
-            }, 3000)
+            try {
+                await this.loginOnApi()
+            } catch (e) {
+                console.error(e)
+            }
         } else {
             //showModalError
         }
     }
 
-    dispose() {
-        this.store().dispatch(AuthPageVmAction(AuthPageVmState))
+    recoveryPass(navigate?: () => void) {
+        if (navigate != null) {
+            navigate()
+        }
     }
 }
 
@@ -72,11 +84,11 @@ export const authPageVmReducer = (
 };
 
 type TAction = {
-    type: "set_auth_vm_state",
+    type: "set_state",
     state: TAuthPageVmState,
 }
 
-const AuthPageVmAction = (state: TAuthPageVmState): TAction => ({
-    type: "set_auth_vm_state",
+const authPageVmAction = (state: TAuthPageVmState): TAction => ({
+    type: "set_state",
     state: state,
 });

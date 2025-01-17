@@ -1,16 +1,41 @@
 import {store} from "../../../features/common/redux";
 import {MainPageVmState} from "./main_state";
-import {authService} from "../../../features/auth/domain/auth_service";
+import {authService, isAuthBehaviorSubject} from "../../../features/auth/domain/auth_service";
+import {BehaviorSubject} from "rxjs";
 
-type TMainPageVmState = typeof MainPageVmState
+export type TMainPageVmState = typeof MainPageVmState
 
 export class MainPageVm {
-    private store() {
-        return store
+    private store = () => store
+
+    changeStateNotifier = new BehaviorSubject<TMainPageVmState>(MainPageVmState)
+
+    state(): TMainPageVmState {
+        return this.store().getState().mainPageVmReducer
     }
 
-    dispose() {
-        this.store().dispatch(mainPageVmAction(MainPageVmState))
+    initState() {
+        this.setState(MainPageVmState)
+        this.isAuthSubscription()
+        this.initAuth()
+    }
+
+    setState(state: TMainPageVmState) {
+        this.store().dispatch(mainPageVmAction(state))
+        this.changeStateNotifier.next(state)
+    }
+
+    isAuthSubscription() {
+        isAuthBehaviorSubject.subscribe((value) => {
+            console.log(`devv value = ${value}`)
+            if (value) {
+                this.setState({...this.state(), isLogin: value})
+            }
+        })
+    }
+
+    initAuth() {
+        authService.getAuthState()
     }
 }
 
@@ -26,11 +51,7 @@ type TAction = {
     state: TMainPageVmState,
 }
 
-const mainPageVmAction = (state: TMainPageVmState): TAction => ({
+export const mainPageVmAction = (state: TMainPageVmState): TAction => ({
     type: 'set_main_vm_state',
     state: state,
 });
-
-export type MainPageVmInterface = {
-    vm: MainPageVm
-}

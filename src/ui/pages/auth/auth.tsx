@@ -1,24 +1,37 @@
 import React, {Component} from "react";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../features/common/redux";
-import {AuthPageVM, AuthPageVMInterface} from "./auth_vm";
+import {AuthPageVM, AuthPageVmType, TAuthPageVmState} from "./auth_vm";
 import {Button, CircularProgress, Container, Input} from "@mui/joy";
 import {useNavigate} from "react-router-dom";
 
-export class AuthPageComponent extends Component {
-    vm = AuthPageVM.prototype
+type TAuthPageComponentProps = {}
 
-    componentWillUnmount() {
-        this.vm.dispose()
+export class AuthPageComponent extends Component<TAuthPageComponentProps, TAuthPageVmState> {
+    private vm = new AuthPageVM()
+
+    constructor(props: TAuthPageComponentProps) {
+        super(props);
+        this.state = this.vm.state()
+        this.vm.initState()
+    }
+
+    updateComponentOnRender() {
+        this.vm.changeStateNotifier.subscribe((value) => {
+            if (value) {
+                this.setState(value)
+            }
+        })
     }
 
     render() {
-        return <AuthPageView vm={this.vm}/>;
+        setTimeout(() => {
+            this.updateComponentOnRender()
+        }, 50)
+
+        return <AuthPageView vm={this.vm} state={this.state}/>
     }
 }
 
-const AuthPageView = ({vm}: AuthPageVMInterface): JSX.Element => {
-    let state = useSelector((state: RootState) => state.authPageVmReducer)
+const AuthPageView = ({vm, state}: AuthPageVmType): JSX.Element => {
     let navigate = useNavigate()
 
     return (
@@ -36,7 +49,7 @@ const AuthPageView = ({vm}: AuthPageVMInterface): JSX.Element => {
                     display: 'flex',
                     flexDirection: 'column',
                 }}>
-                <p>Введите логин</p>
+                <p>Логин</p>
                 <Input
                     disabled={state.isDisabled}
                     placeholder={'Логин'}
@@ -47,9 +60,8 @@ const AuthPageView = ({vm}: AuthPageVMInterface): JSX.Element => {
             <Container sx={{
                 display: 'flex',
                 flexDirection: 'column',
-
             }}>
-                <p>Введите пароль</p>
+                <p>Пароль</p>
                 <Input
                     disabled={state.isDisabled}
                     placeholder={'Пароль'}
@@ -106,7 +118,7 @@ const AuthPageView = ({vm}: AuthPageVMInterface): JSX.Element => {
                                     bgcolor: 'unset',
                                 },
                             }}
-                            onClick={() => navigate('/registration')}>
+                            onClick={() => vm.recoveryPass()}>
                             Забыли пароль?
                         </Button>
                     </Container>

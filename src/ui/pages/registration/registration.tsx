@@ -1,22 +1,40 @@
 import React, {Component} from "react";
-import {RegistrationPageVm, RegistrationPageVmInterface} from "./registration_vm";
-import {Button, Container, IconButton, Input} from "@mui/joy";
+import {RegistrationPageVm, RegistrationPageVmType, TRegistrationPageVmState} from "./registration_vm";
+import {Button, CircularProgress, Container, IconButton, Input} from "@mui/joy";
 import {useNavigate} from "react-router-dom";
 
-export class RegistrationPageComponent extends Component {
-    vm = RegistrationPageVm.prototype
+type TRegistrationPageComponentProps = {}
 
-    componentWillUnmount() {
-        this.vm.dispose()
+export class RegistrationPageComponent extends Component<TRegistrationPageComponentProps, TRegistrationPageVmState> {
+    vm = new RegistrationPageVm()
+
+    constructor(props: TRegistrationPageComponentProps) {
+        super(props);
+        this.state = this.vm.state()
+        this.vm.initState()
+    }
+
+    componentWillUnmount = () => this.vm.dispose()
+
+    updateComponentOnRender() {
+        this.vm.changeStateNotifier.subscribe((value) => {
+            if (value) {
+                this.setState(value)
+            }
+        })
     }
 
     render() {
-        return <AuthPageView vm={this.vm}/>;
+        setTimeout(() => {
+            this.updateComponentOnRender()
+        }, 50)
+
+        return <RegistrationPageView vm={this.vm} state={this.state}/>
     }
 }
 
-const AuthPageView = ({vm}: RegistrationPageVmInterface): JSX.Element => {
-    let navigate = useNavigate()
+const RegistrationPageView = ({vm, state}: RegistrationPageVmType): JSX.Element => {
+    const navigate = useNavigate()
 
     return <Container
         sx={{
@@ -27,7 +45,7 @@ const AuthPageView = ({vm}: RegistrationPageVmInterface): JSX.Element => {
             maxWidth: 800,
         }}>
 
-        <Container sx={{ position:'relative', textAlign: 'center'}}>
+        <Container sx={{position: 'relative', textAlign: 'center'}}>
             <IconButton onClick={() => navigate(-1)} sx={{position: 'absolute', left: 10}}>
                 <p style={{fontSize: 20, fontWeight: "bold"}}>&#8592;</p>
             </IconButton>
@@ -39,41 +57,41 @@ const AuthPageView = ({vm}: RegistrationPageVmInterface): JSX.Element => {
                 display: 'flex',
                 flexDirection: 'column',
             }}>
-            <p>Ваш логин</p>
+            <p>Придумайте логин</p>
             <Input
-                disabled={false}
+                disabled={state.isDisabled}
                 placeholder={'Логин'}
                 type={'text'}
+                onChange={event => vm.setUserName(event.target.value)}
             />
-            <p>Ваша почта</p>
+            <p>Придумайте пароль</p>
             <Input
-                disabled={false}
-                placeholder={'Почта'}
-                type={'text'}
-            />
-            <p>Ваш пароль</p>
-            <Input
-                disabled={false}
+                disabled={state.isDisabled}
                 placeholder={'Пароль'}
                 type={'password'}
+                onChange={event => vm.setPasswordName(event.target.value)}
             />
-
-            <Button
-                sx={{
-                    width: 250,
-                    marginTop: 3,
-                    backgroundColor: 'darkslateblue',
-                    opacity: 0.9,
-                    transition: '.1s all ease-in',
-                    alignSelf: 'center',
-                    '&:hover': {
-                        bgcolor: 'darkslateblue',
-                        opacity: 1,
-                    },
-                }}
-                onClick={() => vm.registration()}>
-                Регистрация
-            </Button>
+            {
+                state.isLoading
+                    ? <CircularProgress sx={{marginTop: 2}} variant="plain"/> :
+                    <Button
+                        disabled={state.isShowRegBtn}
+                        sx={{
+                            width: 250,
+                            marginTop: 3,
+                            backgroundColor: 'darkslateblue',
+                            opacity: 0.9,
+                            transition: '.1s all ease-in',
+                            alignSelf: 'center',
+                            '&:hover': {
+                                bgcolor: 'darkslateblue',
+                                opacity: 1,
+                            },
+                        }}
+                        onClick={() => vm.registration(() => navigate('/'))}>
+                        Регистрация
+                    </Button>
+            }
         </Container>
 
     </Container>

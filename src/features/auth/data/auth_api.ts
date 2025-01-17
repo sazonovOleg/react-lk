@@ -1,12 +1,15 @@
+import {$authHost} from "../../common/axios";
+
 export const authApi = {
-    login(userLogin: string, userPassword: string) {
-        console.log(`devv ${userLogin}`)
-        console.log(`devv ${userPassword}`)
+    async login(name: string, password: string) {
+        const res = await $authHost.post('/api/auth/login', {name, password})
+
+        return res.status == 200;
     },
 
-    registration(userLogin: string, userEmail: string,userPassword: string) {
-        console.log(`devv ${userLogin}`)
-        console.log(`devv ${userPassword}`)
-        console.log(`devv ${userPassword}`)
+    async registration(name: string, password: string) {
+        const res = await $authHost.post('/api/auth/registration', {name, password})
+
+        return res.data
     }
 }

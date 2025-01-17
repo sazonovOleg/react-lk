@@ -1,26 +1,61 @@
-import React, {Component} from "react";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../features/common/redux";
+import React, {PureComponent} from "react";
+import {GoodsPageVm, GoodsPageVmType, TGoodsPageVmState} from "./goods_vm";
+import {CircularProgress, Container} from "@mui/joy";
 import {useNavigate} from "react-router-dom";
-import {GoodsPageVm, GoodsPageVmInterface} from "./goods_vm";
 
-export class GoodsPage extends Component {
-    vm = GoodsPageVm.prototype
+type TGoodsPageComponentProps = {}
+
+export class GoodsPageComponent extends PureComponent<TGoodsPageComponentProps, TGoodsPageVmState> {
+    vm = new GoodsPageVm()
+
+    constructor(props: TGoodsPageComponentProps) {
+        super(props);
+        this.state = this.vm.state()
+        this.vm.initState()
+    }
+
+    componentDidMount() {
+        this.vm.componentDidMount()
+    }
+
+    updateComponentOnRender() {
+        this.vm.changeStateNotifier.subscribe((value) => {
+            if (value) {
+                this.setState(value)
+            }
+        })
+    }
 
     componentWillUnmount() {
-        this.vm.dispose()
+        this.vm.componentWillUnmount()
     }
 
     render() {
-        return <GoodsPageView vm={this.vm}/>;
+        setTimeout(() => {
+            this.updateComponentOnRender()
+        }, 50)
+
+        return <GoodsPageView vm={this.vm} state={this.state}/>
     }
 }
 
-const GoodsPageView = ({vm}: GoodsPageVmInterface): JSX.Element => {
-    let state = useSelector((state: RootState) => state.authPageVmReducer)
-    let navigate = useNavigate()
+const GoodsPageView = ({vm, state}: GoodsPageVmType): JSX.Element => {
+    return <Container
+        sx={{
+            paddingTop: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            maxWidth: 800,
+        }}>
+        {
+            state.isLoading
+                ? <CircularProgress sx={{marginTop: 2}} variant="plain"/>
+                : <div>
+                    <h2>List {state.listString}</h2>
+                    <h3>List length {state.listLength}</h3>
+                </div>
+        }
 
-    return (<div>
-
-    </div>)
+    </Container>
 }
