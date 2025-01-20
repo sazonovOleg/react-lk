@@ -27,10 +27,7 @@ export class MainPageVm {
 
     isAuthSubscription() {
         isAuthBehaviorSubject.subscribe((value) => {
-            console.log(`devv value = ${value}`)
-            if (value) {
-                this.setState({...this.state(), isLogin: value})
-            }
+            this.setState({...this.state(), isLogin: value})
         })
     }
 

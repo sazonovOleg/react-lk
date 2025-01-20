@@ -3,12 +3,16 @@ import {authPageVmReducer} from "../../../ui/pages/auth/auth_vm";
 import {registrationPageVmReducer} from "../../../ui/pages/registration/registration_vm";
 import {mainPageVmReducer} from "../../../ui/pages/main/main_vm";
 import {goodsPageVmReducer} from "../../../ui/pages/goods/goods_vm";
+import {appbarReducer} from "../../../ui/common/appbar/appbar_vm";
+import {profilePageVmReducer} from "../../../ui/pages/profile/profile_vm";
 
 export const rootReducer = combineReducers({
     authPageVmReducer: authPageVmReducer,
     registrationPageVmReducer: registrationPageVmReducer,
     mainPageVmReducer: mainPageVmReducer,
     goodsPageVmReducer: goodsPageVmReducer,
+    appbarReducer: appbarReducer,
+    profilePageVmReducer: profilePageVmReducer,
 })
 
 function saveToLocalStorage(state: any) {

@@ -35,13 +35,15 @@ export const authService = {
         isAuthBehaviorSubject.next(value)
     },
 
-    getAuthState() {
+    getAuthStateFromStorage(): boolean {
         const storageItem = localStorage.getItem(this.authKey) ?? 'false'
 
-        if (storageItem != 'false') {
-            this.saveAuthState(true)
-        } else {
-            this.saveAuthState(false)
-        }
+        return storageItem != 'false'
+    },
+
+    getAuthState() {
+        const isStorageItem = this.getAuthStateFromStorage()
+
+        this.saveAuthState(isStorageItem)
     },
 };

@@ -1,11 +1,11 @@
+import {GoodsModelsType} from "../../../features/goods/models/goods_model";
+
 type TGoodsPageStateVm = {
     isLoading: boolean,
-    listString: string[],
-    listLength: number,
+    goods: GoodsModelsType[]
 }
 
 export const GoodsPageStateVm: TGoodsPageStateVm = {
     isLoading: false,
-    listString: [],
-    listLength: 0,
+    goods: [],
 }

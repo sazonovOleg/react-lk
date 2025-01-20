@@ -38,14 +38,12 @@ export class GoodsPageVm {
     }
 
     async getGoods() {
+        this.setState({...this.state(), isLoading: true})
         await this.goodsService().getGoods().then((value) => {
-            if (value.list.length > 1) {
-                this.setState({
-                    ...this.state(),
-                    listString: value.list,
-                    isLoading: false,
-                    listLength: value.list.length,
-                })
+            if (value.length != 0) {
+                setTimeout(() => {
+                    this.setState({...this.state(), isLoading: false, goods: value})
+                }, 1000)
             }
         })
     }
