@@ -56,7 +56,7 @@ const GoodsPageView = ({vm, state}: GoodsPageVmType): JSX.Element => {
                         display: 'flex',
                         flexDirection: 'row',
                         flexWrap: 'wrap',
-                        alignItems: 'center'
+                        justifyContent: 'center',
                     }}>
                     {state.goods?.map((el, key) => {
                         return <GoodsItemView key={key} id={el.id} name={el.name} img={el.img} price={el.price}/>

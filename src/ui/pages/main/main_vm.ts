@@ -1,12 +1,17 @@
 import {store} from "../../../features/common/redux";
 import {MainPageVmState} from "./main_state";
-import {authService, isAuthBehaviorSubject} from "../../../features/auth/domain/auth_service";
+import {AuthService, isAuthBehaviorSubject} from "../../../features/auth/domain/auth_service";
 import {BehaviorSubject} from "rxjs";
 
 export type TMainPageVmState = typeof MainPageVmState
 
 export class MainPageVm {
+    private authService: AuthService
     private store = () => store
+
+    constructor() {
+        this.authService = new AuthService()
+    }
 
     changeStateNotifier = new BehaviorSubject<TMainPageVmState>(MainPageVmState)
 
@@ -32,7 +37,7 @@ export class MainPageVm {
     }
 
     initAuth() {
-        authService.getAuthState()
+        this.authService.getAuthState()
     }
 }
 

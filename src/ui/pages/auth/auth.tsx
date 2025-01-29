@@ -118,7 +118,7 @@ const AuthPageView = ({vm, state}: AuthPageVmType): JSX.Element => {
                                     bgcolor: 'unset',
                                 },
                             }}
-                            onClick={() => vm.recoveryPass()}>
+                            onClick={() => navigate('/recovery')}>
                             Забыли пароль?
                         </Button>
                     </Container>

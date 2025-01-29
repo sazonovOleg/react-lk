@@ -1,10 +1,16 @@
 import {UserModelType} from "../models/user_model";
-import {userRepo} from "../data/user_repo";
+import {UserRepo} from "../data/user_repo";
 
-export const userService = {
+export class UserService {
+    private userRepo: UserRepo
+
+    constructor() {
+        this.userRepo = new UserRepo()
+    }
+
     async getGoods() {
-        const user: UserModelType = await userRepo.getUserData()
+        const user: UserModelType = await this.userRepo.getUserData()
 
         return user
-    },
+    }
 }

@@ -1,7 +1,8 @@
 import {$authHost} from "../../common/axios";
+import {AxiosResponse} from "axios";
 
-export const userApi = {
-    async getUserData() {
-        return await $authHost.get('/api/goods/')
-    },
+export class UserApi {
+    async getUserData(): Promise<AxiosResponse> {
+        return await $authHost.get('/api/user/')
+    }
 }

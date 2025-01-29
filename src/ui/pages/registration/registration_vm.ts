@@ -1,4 +1,4 @@
-import {authService} from "../../../features/auth/domain/auth_service";
+import {AuthService} from "../../../features/auth/domain/auth_service";
 import {store} from "../../../features/common/redux";
 import {RegistrationPageVmState} from "./registration_state";
 import {BehaviorSubject} from "rxjs";
@@ -15,13 +15,14 @@ export class RegistrationPageVm {
     private userPassword = ''
     private isLogin = false
     private isPassword = false
+    private authService: AuthService
+
+    constructor() {
+        this.authService = new AuthService()
+    }
 
     private store() {
         return store
-    }
-
-    private authService() {
-        return authService
     }
 
     changeStateNotifier = new BehaviorSubject<TRegistrationPageVmState>(RegistrationPageVmState)
@@ -42,7 +43,7 @@ export class RegistrationPageVm {
     async registration(navigate?: () => void) {
         if (this.isLogin && this.isPassword) {
             this.setState({...this.state(), isLoading: true, isDisabled: true})
-            const isRegistration = await this.authService().isRegistration(this.userLogin, this.userPassword)
+            const isRegistration = await this.authService.isRegistration(this.userLogin, this.userPassword)
 
             if (isRegistration && navigate != null) {
                 navigate()

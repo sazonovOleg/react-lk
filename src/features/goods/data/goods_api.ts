@@ -1,7 +1,7 @@
 import {$authHost} from "../../common/axios";
 
-export const goodsApi = {
+export class GoodsApi {
     async getGoods() {
         return await $authHost.get('/api/goods/')
-    },
+    }
 }

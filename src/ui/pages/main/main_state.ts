@@ -1,4 +1,4 @@
-export type TMainPageVmState = {
+type TMainPageVmState = {
     isLoading: boolean,
     isLogin: boolean,
 }

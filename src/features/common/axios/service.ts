@@ -1,5 +1,5 @@
 export function setAxiosBaseUrl(): string {
-    return "http://localhost:3020"
+    return "http://127.0.0.1:3020"
 }
 
 export const authInterceptor = (config: any) => {

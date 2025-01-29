@@ -1,4 +1,4 @@
-import {authService} from "../../../features/auth/domain/auth_service";
+import {AuthService} from "../../../features/auth/domain/auth_service";
 import {store} from "../../../features/common/redux";
 import {AuthPageVmState} from "./auth_state";
 import {BehaviorSubject} from "rxjs";
@@ -15,6 +15,11 @@ export class AuthPageVM {
     private userPassword = ''
     private isLogin = false
     private isPassword = false
+    private authService: AuthService
+
+    constructor() {
+        this.authService = new AuthService()
+    }
 
     private store() {
         return store
@@ -52,7 +57,7 @@ export class AuthPageVM {
     }
 
     async loginOnApi() {
-        await authService.login(this.userLogin, this.userPassword)
+        await this.authService.login(this.userLogin, this.userPassword)
     }
 
     async login() {
@@ -66,12 +71,6 @@ export class AuthPageVM {
             }
         } else {
             //showModalError
-        }
-    }
-
-    recoveryPass(navigate?: () => void) {
-        if (navigate != null) {
-            navigate()
         }
     }
 }

@@ -1,7 +1,7 @@
 import {store} from "../../../features/common/redux";
 import {BehaviorSubject} from "rxjs";
 import {AppbarVmState} from "./appbar_state";
-import {authService} from "../../../features/auth/domain/auth_service";
+import {AuthService} from "../../../features/auth/domain/auth_service";
 
 export type TAppbarVmState = typeof AppbarVmState
 
@@ -11,7 +11,12 @@ export type AppbarVmType = {
 }
 
 export class AppbarVm {
+    private authService: AuthService
     private store = () => store
+
+    constructor() {
+        this.authService = new AuthService()
+    }
 
     changeStateNotifier = new BehaviorSubject<TAppbarVmState>(AppbarVmState)
 
@@ -33,11 +38,11 @@ export class AppbarVm {
     }
 
     logout = () => () => {
-        authService.saveAuthState(false)
+        this.authService.saveAuthState(false)
     }
 
     isLogin(): boolean {
-        return authService.getAuthStateFromStorage()
+        return this.authService.getAuthStateFromStorage()
     }
 }
 

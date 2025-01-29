@@ -1,10 +1,16 @@
-import {userApi} from "./user_api";
+import {UserApi} from "./user_api";
 import {UserModelType} from "../models/user_model";
 
+export class UserRepo {
+    private userApi: UserApi
 
-export const userRepo = {
+    constructor() {
+        this.userApi = new UserApi()
+    }
+
     async getUserData() {
-        const res = await userApi.getUserData()
+        const res = await this.userApi.getUserData()
+
         let user: UserModelType = {
             token: '',
             name: '',

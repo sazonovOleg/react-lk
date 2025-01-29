@@ -2,7 +2,6 @@ import React, {PureComponent} from "react";
 import {MainPageVm, TMainPageVmState} from "./main_vm";
 import {GoodsPageComponent} from "../goods/goods";
 import {AuthPageComponent} from "../auth/auth";
-import {AppbarPageComponent} from "../../common/appbar/appbar";
 
 type TMainPageComponentProps = {}
 

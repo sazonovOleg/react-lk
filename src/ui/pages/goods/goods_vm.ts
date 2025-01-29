@@ -1,20 +1,21 @@
 import {store} from "../../../features/common/redux";
 import {GoodsPageStateVm} from "./goods_state";
-import {goodsService} from "../../../features/goods/domain/goods_service";
+import {GoodsService} from "../../../features/goods/domain/goods_service";
 import {BehaviorSubject} from "rxjs";
 
 export type TGoodsPageVmState = typeof GoodsPageStateVm
 
 export class GoodsPageVm {
+    private goodsService: GoodsService
     private store() {
         return store
     }
 
-    changeStateNotifier = new BehaviorSubject<TGoodsPageVmState>(this.state())
-
-    private goodsService() {
-        return goodsService
+    constructor() {
+        this.goodsService = new GoodsService()
     }
+
+    changeStateNotifier = new BehaviorSubject<TGoodsPageVmState>(this.state())
 
     state() {
         return this.store().getState().goodsPageVmReducer
@@ -39,7 +40,7 @@ export class GoodsPageVm {
 
     async getGoods() {
         this.setState({...this.state(), isLoading: true})
-        await this.goodsService().getGoods().then((value) => {
+        await this.goodsService.getGoods().then((value) => {
             if (value.length != 0) {
                 setTimeout(() => {
                     this.setState({...this.state(), isLoading: false, goods: value})

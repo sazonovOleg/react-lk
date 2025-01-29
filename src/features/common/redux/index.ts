@@ -5,6 +5,8 @@ import {mainPageVmReducer} from "../../../ui/pages/main/main_vm";
 import {goodsPageVmReducer} from "../../../ui/pages/goods/goods_vm";
 import {appbarReducer} from "../../../ui/common/appbar/appbar_vm";
 import {profilePageVmReducer} from "../../../ui/pages/profile/profile_vm";
+import {recoveryPassVmReducer} from "../../../ui/pages/recovery_pass/recovery_pass_vm";
+import {chatPageVmReducer} from "../../../ui/pages/chat/chat_vm";
 
 export const rootReducer = combineReducers({
     authPageVmReducer: authPageVmReducer,
@@ -13,6 +15,8 @@ export const rootReducer = combineReducers({
     goodsPageVmReducer: goodsPageVmReducer,
     appbarReducer: appbarReducer,
     profilePageVmReducer: profilePageVmReducer,
+    recoveryPassVmReducer: recoveryPassVmReducer,
+    chatPageVmReducer: chatPageVmReducer,
 })
 
 function saveToLocalStorage(state: any) {
@@ -38,5 +42,3 @@ function loadFromLocalStorage() {
 export const store = createStore(rootReducer, loadFromLocalStorage());
 
 store.subscribe(() => saveToLocalStorage(store.getState()))
-
-export type RootState = ReturnType<typeof rootReducer>;

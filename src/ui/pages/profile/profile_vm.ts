@@ -1,7 +1,7 @@
 import {store} from "../../../features/common/redux";
 import {BehaviorSubject} from "rxjs";
 import {ProfilePageVmState} from "./profile_state";
-import {userService} from "../../../features/user/domain/user_service";
+import {UserService} from "../../../features/user/domain/user_service";
 
 export type TProfilePageVmState = typeof ProfilePageVmState
 
@@ -11,7 +11,12 @@ export type ProfilePageVmType = {
 }
 
 export class ProfilePageVm {
+    private userService: UserService
     private store = () => store
+
+    constructor() {
+        this.userService = new UserService()
+    }
 
     changeStateNotifier = new BehaviorSubject<TProfilePageVmState>(ProfilePageVmState)
 
@@ -21,7 +26,10 @@ export class ProfilePageVm {
 
     initState() {
         this.setState(ProfilePageVmState)
-        this.getUserData()
+    }
+
+    async componentDidMount() {
+        await this.getUserData()
     }
 
     setState(state: TProfilePageVmState) {
@@ -30,7 +38,7 @@ export class ProfilePageVm {
     }
 
     async getUserData() {
-        const user = await userService.getGoods()
+        const user = await this.userService.getGoods()
         this.setState({...this.state(), user: user})
     }
 }

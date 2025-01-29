@@ -1,6 +1,6 @@
 import React, {PureComponent} from "react";
 import {ProfilePageVm, ProfilePageVmType, TProfilePageVmState} from "./profile_vm";
-import {Container} from "@mui/joy";
+import {CircularProgress, Container} from "@mui/joy";
 
 type TMainPageComponentProps = {}
 
@@ -11,6 +11,10 @@ export class ProfilePageComponent extends PureComponent<TMainPageComponentProps,
         super(props);
         this.state = this.vm.state()
         this.vm.initState()
+    }
+
+    componentDidMount() {
+        this.vm.componentDidMount()
     }
 
     async updateComponentOnRender() {
@@ -31,8 +35,10 @@ export class ProfilePageComponent extends PureComponent<TMainPageComponentProps,
 }
 
 const ProfilePageView = ({vm, state}: ProfilePageVmType): JSX.Element => {
-    return <Container>
-        <p>Имя пользователя: {state.user.name}</p>
-        <p>Ваш токен {state.user.token}</p>
-    </Container>
+    return state.isLoading
+        ? <CircularProgress sx={{marginTop: 2}} variant="plain"/>
+        : <Container sx={{display: 'flex', flexDirection: 'column', width: 1000,}}>
+            <p>Имя пользователя: {state.user?.name}</p>
+            <p style={{textWrap: 'wrap', maxWidth: 400}}>Ваш токен {state.user?.token}</p>
+        </Container>
 }

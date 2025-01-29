@@ -4,6 +4,7 @@ import {AppBar, Toolbar} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Chat from '@mui/icons-material/Chat';
 import {AppbarVm, AppbarVmType, TAppbarVmState} from "./appbar_vm";
 import {useNavigate} from "react-router-dom";
 
@@ -78,6 +79,14 @@ const AppbarView = ({vm, state}: AppbarVmType): JSX.Element => {
                                     sx={{mr: 2, color: 'white'}}
                                 >
                                     <AccountCircleIcon/>
+                                </IconButton>
+                                <IconButton
+                                    size="lg"
+                                    aria-label="menu"
+                                    onClick={() => navigate('/chat')}
+                                    sx={{mr: 2, color: 'white'}}
+                                >
+                                    <Chat/>
                                 </IconButton>
                                 <IconButton
                                     size="lg"

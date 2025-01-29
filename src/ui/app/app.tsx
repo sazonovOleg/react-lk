@@ -6,6 +6,8 @@ import {RegistrationPageComponent} from "../pages/registration/registration";
 import {MainPageComponent} from "../pages/main/main";
 import {ProfilePageComponent} from "../pages/profile/profile";
 import {LayoutPageComponent} from "../pages/layout/layout";
+import {RecoveryPassComponent} from "../pages/recovery_pass/recovery_pass";
+import {ChatPageComponent} from "../pages/chat/chat";
 
 class App extends Component {
     render() {
@@ -16,7 +18,9 @@ class App extends Component {
                         <Route path="/" element={<LayoutPageComponent/>}>
                             <Route index element={<MainPageComponent/>}/>
                             <Route path="/registration" element={<RegistrationPageComponent/>}/>
+                            <Route path="/recovery" element={<RecoveryPassComponent/>}/>
                             <Route path="/profile" element={<ProfilePageComponent/>}/>
+                            <Route path="/chat" element={<ChatPageComponent/>}/>
                         </Route>
                     </Routes>
                 </BrowserRouter>
